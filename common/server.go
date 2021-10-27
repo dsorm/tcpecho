@@ -12,15 +12,19 @@ func ServerStart(address string) {
 		panic(err)
 	}
 
-	go func() {
-		for {
-			conn, err := l.Accept()
-			if err != nil {
-				fmt.Println(err)
+	for i := 0; i < 64; i++ {
+		var conn net.Conn
+		var err error
+		go func() {
+			for {
+				conn, err = l.Accept()
+				if err != nil {
+					fmt.Println(err)
+				}
+				_, _ = io.Copy(conn, conn)
+				_ = conn.Close()
 			}
-			_, _ = io.Copy(conn, conn)
-			_ = conn.Close()
-		}
-	}()
+		}()
+	}
 
 }
