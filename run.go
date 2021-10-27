@@ -1,12 +1,11 @@
 package main
 
 import (
+	"bufio"
 	"fmt"
-	"io"
-	"net"
+	"github.com/dsorm/tcpecho/common"
 	"os"
 	"strconv"
-	"time"
 )
 
 func main() {
@@ -16,22 +15,8 @@ func main() {
 	}
 
 	address := fmt.Sprintf(":%v", port)
-	l, err := net.Listen("tcp", address)
-	if err != nil {
-		panic(err)
-	}
-
-	fmt.Println("Listening for incoming tcp on port 7")
-	defer l.Close()
-
-	for {
-		conn, err := l.Accept()
-		if err != nil {
-			fmt.Println(err)
-		}
-		time.Sleep(time.Second*5)
-		_, _ = io.Copy(conn, conn)
-		conn.Close()
-	}
-
+	common.ServerStart(address)
+	fmt.Printf("Listening for incoming tcp on %v\nPress ENTER to exit\n", address)
+	sc := bufio.NewScanner(os.Stdin)
+	sc.Scan()
 }
