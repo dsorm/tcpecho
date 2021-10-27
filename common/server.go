@@ -21,8 +21,9 @@ func ServerStart(address string) {
 				if err != nil {
 					fmt.Println(err)
 				}
-				_, _ = io.Copy(conn, conn)
-				_ = conn.Close()
+				go func() {
+					_, _ = io.Copy(conn, conn)
+				}()
 			}
 		}()
 	}
