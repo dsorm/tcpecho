@@ -19,8 +19,15 @@ func TestServerStart(t *testing.T) {
 
 	// if not equal
 	if bytes.Compare(expected, got) != 0 {
-		t.Fatalf("Error while testing server: got %v, expected %v", string(got), string(expected))
+		t.Fatalf("Error while sending single echo: got %v, expected %v", string(got), string(expected))
 	}
+
+	equal, got := SendEchosAndVerify([]byte("Test!"), 16, ServerAddress, 5*time.Second)
+
+	if !equal {
+		t.Fatalf("Error while sending multiple echos in single connection: got %v, expected %v", string(got), string(expected))
+	}
+
 }
 
 func Benchmark_1x(b *testing.B) {
